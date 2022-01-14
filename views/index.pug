@@ -1,0 +1,14 @@
+block content
+  table#jobTable 
+    thead 
+      tr 
+        th Name 
+        th City 
+        th Client
+    tbody 
+      each job in jobs 
+        tr
+         td 
+          a(href=`jobDetail/${job.id}`) #{job.job_name }
+         td #{job.city}
+         td #{job.client_name}

@@ -1,0 +1,7 @@
+if jobFound
+  h1= `JobId: ${jobId}`
+  ul
+    for ticket in tickets
+      li= ticket.ticket_number
+else
+  h1= "ticket not found"
