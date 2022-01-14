@@ -4,7 +4,6 @@ const fs = require('fs');
 function createIterator() {
   // returns an object where insertData() can iterate through in order
   // to add a list of tickets to the database
-
   const [jobName, sourceDirectory] = process.argv.slice(2);
   console.log(jobName);
   console.log(sourceDirectory);
@@ -33,7 +32,6 @@ function escapeSingleQuote(txt) {
   // turns "my name's gustavo"
   // into  "my name''s gustavo"
   // so that it can be escaped in postgresql
-
   return txt.replaceAll("'", "''");
 }
 
@@ -78,9 +76,7 @@ function parseTicketText(filePath) {
 async function insertData(compiledData, jobName) {
   // takes in a list of objects and then inserts those objects to the database
 
-
   // first we need to get the jobId associated with the job name
-
   const resp = pool.query(`SELECT * FROM job where job_name='${jobName}'`, async (err, result) => {
     if (err) {
       console.log('query error');
@@ -100,31 +96,10 @@ async function insertData(compiledData, jobName) {
       sqlQuery = sqlQuery.slice(0, -1);
       sqlQuery += ";";
 
-      console.log(sqlQuery);
-
       const res = await pool.query(sqlQuery);
       console.log(`added tickets`);
     }
   })
-
-
-
-
-  // const [name, city, client] = process.argv.slice(2);
-  // console.log(name, city, client);
-  // const resp = pool.query(`SELECT * FROM client WHERE client_name='${client}'`, async (err, result) => {
-  //   if (err) {
-  //     console.log('query error');
-  //   }
-  //   let response = result.rows;
-  //   if (response.length == 0) {
-  //     console.log(`${client} was not found`);
-  //   } else {
-  //     let client_id = response[0].id;
-  //     const res = await pool.query(`INSERT INTO job(job_name, city, client_id) VALUES ('${name}','${city}','${client_id}');`);
-  //     console.log(`added new job: ${name}, ${city}, ${client}, client_id: ${client_id}`);
-  //   }
-  // });
 }
 
 createIterator()
