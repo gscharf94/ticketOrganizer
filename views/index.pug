@@ -5,10 +5,17 @@ block content
         th Name 
         th City 
         th Client
+        th Estimated Footage
+        th # of tickets
+        th % tickets clear
     tbody 
       each job in jobs 
         tr
          td 
           a(href=`jobDetail/${job.id}`) #{job.job_name }
          td #{job.city}
-         td #{job.client_name}
+         td 
+          a(href=`clientDetail/${job.client_id}`) #{job.client_name}
+         td= `${job.estimated_footage_formatted}`
+         td #{job.ticket_count}
+         td #{job.percent_clear}

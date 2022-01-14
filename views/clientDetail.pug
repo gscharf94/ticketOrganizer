@@ -1,0 +1,19 @@
+h1= `${client.client_name}`
+
+table#clientJobList
+  thead 
+    tr
+      th Job Name
+      th City 
+      th Estimated Footage
+      th # of tickets
+      th % clear tickets
+  tbody
+    each job in jobs
+      tr
+        td 
+          a(href=`../jobDetail/${job.id}`) #{job.job_name}
+        td #{job.city}
+        td #{job.estimated_footage_formatted}
+        td #{job.ticket_count}
+        td #{job.percent_clear}
