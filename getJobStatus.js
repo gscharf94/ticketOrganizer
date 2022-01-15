@@ -17,10 +17,13 @@ function getTicketNumbers(jobId) {
 }
 
 async function getJobStatus(tickets, jobId) {
+  console.log(`starting positive response pull for job: ${jobId} total tickets = ${tickets.length}`);
 
   let responses = [];
 
+  let counter = 1;
   for (const ticket of tickets) {
+    console.log(`starting ticket: ${ticket.ticket_number} ${counter}/${tickets.length} job: ${jobId}`);
     let outputResponse = {};
     let scrapingResponse = await getTicketStatus(ticket.ticket_number);
     for (const utility in scrapingResponse) {
@@ -38,7 +41,11 @@ async function getJobStatus(tickets, jobId) {
 
       responses.push(outputResponse);
     }
+
+    counter++;
   }
+  console.log(`finished job: ${jobId}`);
+
   insertPositiveResponses.clearJobPositiveResponses(jobId);
   insertPositiveResponses.insertPositiveResponses(responses);
 }

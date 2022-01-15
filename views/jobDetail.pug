@@ -13,7 +13,8 @@ if jobFound
     tbody
       each ticket in tickets
         tr 
-          td #{ticket.ticket_number}
+          td 
+            a(href=`../ticketDetail/${ticket.id}`) #{ticket.ticket_number}
           td #{ticket.street}
           td #{ticket.cross_street}
           td #{ticket.call_in_date_formatted}

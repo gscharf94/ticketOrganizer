@@ -1,0 +1,34 @@
+if ticketFound
+  h1= `${ticket.ticket_number}`
+  table#ticketInfoTable
+    tbody
+      tr
+        td Client:
+        td #{ticket.client_name}
+      tr
+        td Job:
+        td #{ticket.job_name}
+      tr
+        td City:
+        td #{ticket.city}
+
+  table#responseTable
+    thead
+      tr
+        th Utility Name
+        th Utility Type
+        th Response
+        th Notes
+        th Last Update
+    tbody
+      each response in responses
+        tr
+          td #{response.utility_name}
+          td #{response.utility_type}
+          td #{response.response}
+          td #{response.notes}
+          td #{response.last_updated}
+
+
+else
+  h1= "Ticket not found"
