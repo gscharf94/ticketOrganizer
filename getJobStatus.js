@@ -1,4 +1,5 @@
 const getTicketStatus = require('./getTicketStatus');
+const insertPositiveResponses = require('./insertPositiveResponses');
 const { pool } = require('./db');
 
 function getTicketNumbers(jobId) {
@@ -10,19 +11,36 @@ function getTicketNumbers(jobId) {
     if (resp.rows.length == 0) {
       console.log(`no tickets associated with job: ${jobId}`);
     } else {
-      getJobStatus(resp.rows);
+      getJobStatus(resp.rows, jobId);
     }
   })
 }
 
-async function getJobStatus(tickets) {
+async function getJobStatus(tickets, jobId) {
 
-  console.log(tickets);
-  console.log('test...');
-  // for (const ticket of testTickets) {
-  // let response = await getTicketStatus(ticket);
-  // console.log(response);
-  // }
+  let responses = [];
+
+  for (const ticket of tickets) {
+    let outputResponse = {};
+    let scrapingResponse = await getTicketStatus(ticket.ticket_number);
+    for (const utility in scrapingResponse) {
+      let utilityType = scrapingResponse[utility].utilityType;
+      let utilityResponse = scrapingResponse[utility].response;
+      let utilityNotes = scrapingResponse[utility].notes;
+
+      outputResponse = {
+        name: utility,
+        type: utilityType,
+        response: utilityResponse,
+        notes: utilityNotes,
+        ticket_id: ticket.id,
+      }
+
+      responses.push(outputResponse);
+    }
+  }
+  insertPositiveResponses.clearJobPositiveResponses(jobId);
+  insertPositiveResponses.insertPositiveResponses(responses);
 }
 
 module.exports = getTicketNumbers

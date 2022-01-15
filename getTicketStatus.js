@@ -18,7 +18,7 @@ async function getTicketStatus(ticketNumber) {
   await page.goto(ticketSearchURL);
 
   let ticketInputBar = await page.waitForSelector('#mat-input-0');
-  await ticketInputBar.type(testTicket);
+  await ticketInputBar.type(ticketNumber);
 
   let phoneNumberInputBar = await page.waitForSelector('#iq-phone-0 > input');
   await phoneNumberInputBar.type(phoneNumber);
