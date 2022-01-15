@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { pool } = require('../db');
+const formattingFunctions = require('../formattingFunctions');
 
 router.get('/:ticketId', (req, res, next) => {
   const ticketId = req.params.ticketId;
@@ -14,6 +15,10 @@ router.get('/:ticketId', (req, res, next) => {
     let responseFound = true;
     if (positiveResponses.length == 0) {
       responseFound = false;
+    }
+
+    for (const positiveResponse of positiveResponses) {
+      positiveResponse.last_updated_formatted = formattingFunctions.formatTimestamp(positiveResponse.last_updated);
     }
 
     let ticketInfoQuery =
