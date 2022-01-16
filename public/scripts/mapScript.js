@@ -2,8 +2,7 @@
 // mapContainer.height = "500px";
 // document.querySelector('#map').appendChild(mapContainer);
 
-
-let map = L.map('map').setView([51.505, -.09], 13);
+let map = L.map('map');
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
   attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -15,9 +14,36 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(map);
 
 
-var polygon = L.polyline([
-  [28.4166552, -81.4176226],
-  [28.4169289, -81.417746],
-]).addTo(map);
+function drawPolylines(polylines) {
+  // weird result of express & stringify.. need to remove
+  // the &quot; because JSON.parse() can't read it
+  let step = polylines.replaceAll("&quot;", `"`);
+  polylines = JSON.parse(step);
+  console.log(polylines);
 
-map.fitBounds(polygon.getBounds());
+  for (const ticket in polylines) {
+    let points = polylines[ticket].points;
+    drawPolyline(points);
+  }
+}
+
+function drawPolyline(points) {
+  console.log(points);
+
+  let arr = [];
+  for (const point of points) {
+    let row = [point.b, point.a];
+    arr.push(row);
+  }
+
+  console.log(arr);
+
+  let polygon = L.polyline(arr).addTo(map);
+  map.fitBounds(polygon.getBounds());
+}
+
+
+// var polygon = L.polyline([
+  // [28.4166552, -81.4176226],
+  // [28.4169289, -81.417746],
+// ]).addTo(map);

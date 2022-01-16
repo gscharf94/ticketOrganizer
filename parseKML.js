@@ -50,11 +50,11 @@ function parseKML(filepath) {
 }
 
 
-let x = parseKML("/mnt/4AB454E6B454D653/Users/Gustavo/Google Drive/locate stuff/orl 2/Fibertech/2022/JB846385/Locates.kml")
+// let x = parseKML("/mnt/4AB454E6B454D653/Users/Gustavo/Google Drive/locate stuff/orl 2/Fibertech/2022/JB846385/Locates.kml")
 
-for (const set of x) {
-  console.log(set);
-}
+// for (const set of x) {
+// console.log(set);
+// }
 
 
-// module.exports = parseKML;
+module.exports = parseKML;
