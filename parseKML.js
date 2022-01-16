@@ -1,16 +1,20 @@
+const { countReset } = require('console');
 const fs = require('fs');
 
 function parseCoords(txt) {
-  let split = txt.split("\n");
+  let split = txt.trim().split("\n");
   let coords = [];
 
+  let counter = 0;
   for (const row of split) {
     let [a, b, c] = row.split(",");
     coords.push({
       a: a.trim(),
       b: b.trim(),
       c: c.trim(),
+      p: counter,
     });
+    counter++;
   }
   return coords;
 }
@@ -18,7 +22,7 @@ function parseCoords(txt) {
 function parseKML(filepath) {
   let text = fs.readFileSync(filepath, 'utf8');
 
-  let coordinateRegex = /<coordinates>\s*(-\d{2}\.\d*,\d{2}\.\d*,0\s*-\d{2}\.\d*,\d{2}\.\d*,0)\s*<\/coordinates>/g;
+  let coordinateRegex = /<coordinates>([\s.\d,-]*)/g;
   let coordinateResult = text.matchAll(coordinateRegex);
   let coordSets = [...coordinateResult];
 
@@ -30,12 +34,11 @@ function parseKML(filepath) {
 
   if (ticketResult.length != coordinateResult.length) {
     console.log('different number of coordinate sets and ticket number');
+    console.log('exiting');
+    return;
   }
 
-
   let coordinateSets = [];
-
-
   for (let i = 0; i < ticks.length; i++) {
     let coordinateSet = {
       coords: parseCoords(coordSets[i][1]),
@@ -43,18 +46,15 @@ function parseKML(filepath) {
     }
     coordinateSets.push(coordinateSet);
   }
-
-  console.log(coordinateSets[0].coords);
-
-
-
-
-
-  return { test: 'test' }
+  return coordinateSets;
 }
 
 
-parseKML("/mnt/4AB454E6B454D653/Users/Gustavo/Google Drive/locate stuff/orl 2/Fibertech/2022/REQ579945/Locates.kml")
+let x = parseKML("/mnt/4AB454E6B454D653/Users/Gustavo/Google Drive/locate stuff/orl 2/Fibertech/2022/JB846385/Locates.kml")
+
+for (const set of x) {
+  console.log(set);
+}
 
 
 // module.exports = parseKML;
