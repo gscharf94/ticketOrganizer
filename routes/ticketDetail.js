@@ -22,7 +22,8 @@ router.get('/:ticketId', (req, res, next) => {
       if (
         positiveResponse.response.search("Marked") != -1 ||
         positiveResponse.response.search("No Conflict") != -1 ||
-        positiveResponse.response.search("Clear No") != -1
+        positiveResponse.response.search("Clear No") != -1 ||
+        positiveResponse.response.search("test code") != -1
       ) {
         positiveResponse.good_highlight = true;
       } else {

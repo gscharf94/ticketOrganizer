@@ -37,15 +37,12 @@ router.get('/:jobId', (req, res, next) => {
           INNER JOIN job ON ticket.job_id=job.id
           WHERE job.id=${jobId};`;
 
-        console.log(sqlQuery);
-
         const resp2 = pool.query(sqlQuery, (err, resp2) => {
           if (err) {
             console.log(`error pulling locate positions for job: ${jobId}`);
           }
 
           let positions = resp2.rows;
-          console.log(positions);
 
           let ticks = {};
 
@@ -53,6 +50,7 @@ router.get('/:jobId', (req, res, next) => {
             if (!ticks[position.ticket_id]) {
               ticks[position.ticket_id] = {
                 points: [],
+                ticket_status: position.ticket_status,
               }
             }
             ticks[position.ticket_id].points.push({

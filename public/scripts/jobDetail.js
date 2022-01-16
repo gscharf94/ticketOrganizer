@@ -15,26 +15,26 @@ function drawPolylines(polylines) {
   // the &quot; because JSON.parse() can't read it
   let step = polylines.replaceAll("&quot;", `"`);
   polylines = JSON.parse(step);
-  console.log(polylines);
 
   for (const ticket in polylines) {
     let points = polylines[ticket].points;
-    drawPolyline(points);
+    if (polylines[ticket].ticket_status) {
+      var color = "green"
+    } else {
+      var color = "red"
+    }
+    drawPolyline(points, color);
   }
 }
 
-function drawPolyline(points) {
-  console.log(points);
-
+function drawPolyline(points, color) {
   let arr = [];
   for (const point of points) {
     let row = [point.b, point.a];
     arr.push(row);
   }
 
-  console.log(arr);
-
-  let polygon = L.polyline(arr).addTo(map);
+  let polygon = L.polyline(arr, { "color": color }).addTo(map);
   map.fitBounds(polygon.getBounds());
 }
 
