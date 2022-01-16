@@ -31,9 +31,54 @@ router.get('/:jobId', (req, res, next) => {
           ticket.expiration_date_formatted = formattingFunctions.formatDate(ticket.expiration_date);
         }
 
+        sqlQuery =
+          `SELECT * FROM locate_position
+          INNER JOIN ticket ON locate_position.ticket_id=ticket.id
+          INNER JOIN job ON ticket.job_id=job.id
+          WHERE job.id=${jobId};`;
 
-        res.render('jobDetail', { jobId: req.params.jobId, tickets: tickets, jobFound: jobFound, jobName: jobName });
-      })
+        console.log(sqlQuery);
+
+        const resp2 = pool.query(sqlQuery, (err, resp2) => {
+          if (err) {
+            console.log(`error pulling locate positions for job: ${jobId}`);
+          }
+
+          let positions = resp2.rows;
+          console.log(positions);
+
+          let ticks = {};
+
+          for (const position of positions) {
+            if (!ticks[position.ticket_id]) {
+              ticks[position.ticket_id] = {
+                points: [],
+              }
+            }
+            ticks[position.ticket_id].points.push({
+              a: position.start_pos,
+              b: position.end_pos,
+              p: position.place,
+            });
+          }
+
+          for (const tick in ticks) {
+            ticks[tick].points = ticks[tick].points.sort((a, b) => {
+              return a.p - b.p;
+            });
+          }
+
+          res.render('jobDetail', {
+            jobId: req.params.jobId,
+            tickets: tickets,
+            jobFound: jobFound,
+            jobName: jobName,
+            positions: JSON.stringify(ticks)
+          });
+        })
+
+
+      });
 
     }
     else {
