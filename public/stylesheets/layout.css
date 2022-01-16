@@ -1,0 +1,105 @@
+html {
+  font-family: 'Roboto Bold', sans-serif;
+}
+
+#sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.5s;
+}
+
+#sidebar a {
+  padding: 8px 8px 8px 8px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+  margin-top: 35px;
+  margin-bottom: 35px;
+}
+
+#sidebar a:hover {
+  color: #f1f1f1;
+}
+
+#sidebar .closeButton {
+  position: absolute;
+  top: -30;
+  right: 25px;
+  font-size: 50px;
+  margin-left: 50px;
+}
+
+
+.openButton {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: rgb(78, 78, 78);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  /* transition: 0.3s; */
+}
+
+.openButton:hover {
+  background-color: #333;
+}
+
+#logo {
+  width: 75%;
+  background-color: rgb(207, 253, 222);
+  border-radius: 15px;
+  display: block;
+
+  padding: 5px 5px 5px 5px;
+
+  margin-bottom: 15px;
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+#main {
+  transition: margin-left .3s;
+  padding: 10px;
+}
+
+
+@media screen and (max-height: 450px) {
+  #sidebar {padding-top: 15px;}
+  #sidebar a {font-size: 18px;}
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  text-align: left;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #0452aa;
+  color: white;
+}
+
+.nonResponseTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.nonResponseTable tr:hover {
+  background-color: #ddd;
+}

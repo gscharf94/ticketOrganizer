@@ -19,6 +19,15 @@ router.get('/:ticketId', (req, res, next) => {
 
     for (const positiveResponse of positiveResponses) {
       positiveResponse.last_updated_formatted = formattingFunctions.formatTimestamp(positiveResponse.last_updated);
+      if (
+        positiveResponse.response.search("Marked") != -1 ||
+        positiveResponse.response.search("No Conflict") != -1 ||
+        positiveResponse.response.search("Clear No") != -1
+      ) {
+        positiveResponse.good_highlight = true;
+      } else {
+        positiveResponse.good_highlight = false;
+      }
     }
 
     let ticketInfoQuery =
@@ -39,6 +48,7 @@ router.get('/:ticketId', (req, res, next) => {
       if (ticketInfo.length == 0) {
         ticketFound = false;
       }
+
 
       res.render('ticketDetail', {
         ticketId: ticketId,

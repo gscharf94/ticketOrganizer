@@ -1,26 +1,30 @@
-if jobFound
-  h1= `${jobName}`
-  table#ticketTable
-    thead
-      tr
-        th= "Ticket Number"
-        th= "Street"
-        th= "Cross Street"
-        th= "Call-in Date"
-        th= "Expiration Date"
-        th= "Ticket Status"
-        th= "Description"
-    tbody
-      each ticket in tickets
-        tr 
-          td 
-            a(href=`../ticketDetail/${ticket.id}`) #{ticket.ticket_number}
-          td #{ticket.street}
-          td #{ticket.cross_street}
-          td #{ticket.call_in_date_formatted}
-          td #{ticket.expiration_date_formatted}
-          td #{ticket.ticket_status}
-          td #{ticket.description}
+extends layout.pug
 
-else
-  h1= "Job not found"
+block content
+
+  if jobFound
+    h1= `${jobName}`
+    table#ticketTable.nonResponseTable
+      thead
+        tr
+          th= "Ticket Number"
+          th= "Street"
+          th= "Cross Street"
+          th= "Call-in Date"
+          th= "Expiration Date"
+          th= "Ticket Status"
+          th= "Description"
+      tbody
+        each ticket in tickets
+          tr 
+            td 
+              a(href=`../ticketDetail/${ticket.id}`) #{ticket.ticket_number}
+            td #{ticket.street}
+            td #{ticket.cross_street}
+            td #{ticket.call_in_date_formatted}
+            td #{ticket.expiration_date_formatted}
+            td #{ticket.ticket_status}
+            td #{ticket.description}
+
+  else
+    h1= "Job not found"

@@ -1,0 +1,29 @@
+html
+  head
+    title Fiber 1 Communications
+    //- meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/stylesheets/layout.css")
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com" crossorigin="anonymous")
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,700&display=swap")
+    
+
+    block scripts
+  
+
+  body
+    div#sidebar
+      a(href="javascript:void(0)", onclick="closeNav()").closeButton &times;
+      img(src="/images/logo cropped.svg")#logo
+      a(href="http://localhost:3000/") Jobs
+      a(href="#") Clients
+      a(href="#") Reports
+      a(href="#") Billing
+      a(href="#") Expiration
+
+    div#main
+      button(onclick="openNav()")#menuButton.openButton &#9776; Menu
+      block content
+
+    script(src="/scripts/layout.js")
+

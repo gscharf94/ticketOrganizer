@@ -1,34 +1,48 @@
-if ticketFound
-  h1= `${ticket.ticket_number}`
-  table#ticketInfoTable
-    tbody
-      tr
-        td Client:
-        td #{ticket.client_name}
-      tr
-        td Job:
-        td #{ticket.job_name}
-      tr
-        td City:
-        td #{ticket.city}
+extends layout.pug
 
-  table#responseTable
-    thead
-      tr
-        th Utility Name
-        th Utility Type
-        th Response
-        th Notes
-        th Last Update
-    tbody
-      each response in responses
+
+block scripts
+  link(rel="stylesheet", href="/stylesheets/ticketDetail.css")
+
+
+block content
+  if ticketFound
+    h1= `${ticket.ticket_number}`
+    table#ticketInfoTable
+      tbody
         tr
-          td #{response.utility_name}
-          td #{response.utility_type}
-          td #{response.response}
-          td #{response.notes}
-          td #{response.last_updated_formatted}
+          td Client:
+          td #{ticket.client_name}
+        tr
+          td Job:
+          td #{ticket.job_name}
+        tr
+          td City:
+          td #{ticket.city}
 
-
-else
-  h1= "Ticket not found"
+    table#responseTable
+      thead
+        tr
+          th Utility Name
+          th Utility Type
+          th Response
+          th Notes
+          th Last Update
+      tbody
+        each response in responses
+          if response.good_highlight
+            tr.clearRow
+              td #{response.utility_name}
+              td #{response.utility_type}
+              td #{response.response}
+              td #{response.notes}
+              td #{response.last_updated_formatted}
+          else
+            tr.pendingRow
+              td #{response.utility_name}
+              td #{response.utility_type}
+              td #{response.response}
+              td #{response.notes}
+              td #{response.last_updated_formatted}
+  else
+    h1= "Ticket not found"

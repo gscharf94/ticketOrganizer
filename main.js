@@ -10,6 +10,8 @@ const ticketDetailRouter = require('./routes/ticketDetail');
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
+
+app.use(express.static('public'));
 app.use('/', indexRouter);
 app.use('/jobDetail', jobDetailRouter);
 app.use('/clientDetail', clientDetailRouter);
