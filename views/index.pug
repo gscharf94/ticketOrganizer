@@ -20,4 +20,4 @@ block content
           a(href=`clientDetail/${job.client_id}`) #{job.client_name}
          td= `${job.estimated_footage_formatted}`
          td #{job.ticket_count}
-         td #{job.percent_clear}
+         td= `${job.percent_clear}%`

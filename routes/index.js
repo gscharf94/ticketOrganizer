@@ -44,13 +44,35 @@ const resp = pool.query('SELECT * FROM job', (err, res) => {
 
 
         // TEMPORARY
-        job.percent_clear = "0%";
+        job.percent_clear = "0";
       }
 
+      let sqlQuery =
+        `SELECT job.id, COUNT(CASE WHEN ticket.ticket_status=true THEN 1 ELSE NULL END)
+        FROM ticket
+        INNER JOIN job ON ticket.job_id=job.id
+        GROUP BY job.id;`;
+      const resp2 = pool.query(sqlQuery, (err, resp2) => {
+        if (err) {
+          console.log('error pulling clear ticket counts');
+        }
 
+        let clearDictionary = {};
+        for (const row of resp2.rows) {
+          clearDictionary[row.id] = row.count;
+        }
 
-      router.get('/', (req, res, next) => {
-        res.render('index', { title: 'Job List', jobs: jobs, clients: clients });
+        for (const job of jobs) {
+          job.number_clear = clearDictionary[job.id];
+          if (job.number_clear == 0) {
+            // pass
+          } else {
+            job.percent_clear = Math.round((job.number_clear / job.ticket_count) * 100)
+          }
+        }
+        router.get('/', (req, res, next) => {
+          res.render('index', { title: 'Job List', jobs: jobs, clients: clients });
+        });
       });
     });
   });
