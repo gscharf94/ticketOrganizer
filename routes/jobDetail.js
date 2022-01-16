@@ -51,6 +51,7 @@ router.get('/:jobId', (req, res, next) => {
               ticks[position.ticket_id] = {
                 points: [],
                 ticket_status: position.ticket_status,
+                ticket_number: position.ticket_number,
               }
             }
             ticks[position.ticket_id].points.push({

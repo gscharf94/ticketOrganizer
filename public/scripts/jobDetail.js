@@ -23,18 +23,25 @@ function drawPolylines(polylines) {
     } else {
       var color = "red"
     }
-    drawPolyline(points, color);
+    drawPolyline(points, color, polylines[ticket].ticket_number, polylines[ticket].ticket_status);
   }
 }
 
-function drawPolyline(points, color) {
+function drawPolyline(points, color, ticketNumber, ticketStatus) {
   let arr = [];
   for (const point of points) {
     let row = [point.b, point.a];
     arr.push(row);
   }
 
-  let polygon = L.polyline(arr, { "color": color }).addTo(map);
+
+  let polygon = L.polyline(arr, { "color": color, "weight": 6, "fill": true }).addTo(map);
+  if (ticketStatus) {
+    ticketStatus = "Clear";
+  } else {
+    ticketStatus = "Pending";
+  }
+  polygon.bindPopup(`Ticket: ${ticketNumber} Status: ${ticketStatus}`)
   map.fitBounds(polygon.getBounds());
 }
 

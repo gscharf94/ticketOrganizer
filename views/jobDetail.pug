@@ -29,7 +29,10 @@ block content
             td #{ticket.cross_street}
             td #{ticket.call_in_date_formatted}
             td #{ticket.expiration_date_formatted}
-            td #{ticket.ticket_status}
+            if ticket.ticket_status
+              td.clearTicketText Clear
+            else
+              td.pendingTicketText Pending
             td #{ticket.description}
 
   else
