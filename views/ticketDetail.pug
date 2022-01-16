@@ -1,7 +1,7 @@
 extends layout.pug
 
 
-block scripts
+block style
   link(rel="stylesheet", href="/stylesheets/ticketDetail.css")
 
 
@@ -19,6 +19,9 @@ block content
         tr
           td City:
           td #{ticket.city}
+        tr
+          td Expiration Date:
+          td #{ticket.expiration_date_formatted}
 
     table#responseTable
       thead

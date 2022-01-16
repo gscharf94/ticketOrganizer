@@ -49,6 +49,8 @@ router.get('/:ticketId', (req, res, next) => {
         ticketFound = false;
       }
 
+      ticketInfo[0].expiration_date_formatted = formattingFunctions.formatDate(ticketInfo[0].expiration_date);
+
 
       res.render('ticketDetail', {
         ticketId: ticketId,
