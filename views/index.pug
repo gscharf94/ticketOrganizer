@@ -1,5 +1,9 @@
 extends layout.pug
 
+block style
+  link(rel="stylesheet" href="/stylesheets/index.css")
+
+
 block content
   table#jobTable.nonResponseTable
     thead 
@@ -14,10 +18,14 @@ block content
       each job in jobs 
         tr
          td 
-          a(href=`jobDetail/${job.id}`) #{job.job_name }
+          a(href=`jobDetail/${job.id}`) #{job.job_name}
          td #{job.city}
          td 
           a(href=`clientDetail/${job.client_id}`) #{job.client_name}
          td= `${job.estimated_footage_formatted}`
          td #{job.ticket_count}
-         td= `${job.percent_clear}%`
+         - let canvContainerId = `canvasContainer${job.id}`;
+         td(id=canvContainerId).canvasContainer= `${job.percent_clear}%`
+
+block scripts
+  script(src="/scripts/indexScript.js")
