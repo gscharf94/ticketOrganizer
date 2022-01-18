@@ -1,7 +1,7 @@
 const { pool } = require('./db');
 
 function escapeSingleQuote(txt) {
-  return txt.replaceAll("'", "''");
+  return txt.replace(/'/g, "''");
 }
 
 async function clearJobPositiveResponses(jobId) {
