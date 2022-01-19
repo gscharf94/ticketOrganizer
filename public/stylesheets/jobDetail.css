@@ -5,9 +5,25 @@
 .clearTicketText {
   color: darkgreen;
   font-weight: bold;
+  text-align: center;
 }
+
+
 
 .pendingTicketText {
   color: red;
   font-weight: bold;
+  text-align: center;
+}
+
+.canvasContainer {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.percentCanvas {
+}
+
+.descriptionCell {
+  font-size: 1.5ch;
 }

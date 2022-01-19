@@ -13,11 +13,11 @@ block content
     table#ticketTable.nonResponseTable
       thead
         tr
-          th= "Ticket Number"
+          th= "Ticket #"
           th= "Street"
           th= "Cross Street"
-          th= "Call-in Date"
-          th= "Expiration Date"
+          th= "Call Date"
+          th= "Exp Date"
           th= "Ticket Status"
           th= "Description"
       tbody
@@ -29,11 +29,12 @@ block content
             td #{ticket.cross_street}
             td #{ticket.call_in_date_formatted}
             td #{ticket.expiration_date_formatted}
+            - let canvasContainerId = `canvasContainer${ticket.id}`;
             if ticket.ticket_status
-              td.clearTicketText Clear
+              td(id=canvasContainerId).clearTicketText Clear
             else
-              td.pendingTicketText Pending
-            td #{ticket.description}
+              td(id=canvasContainerId).pendingTicketText Pending
+            td.descriptionCell #{ticket.description}
 
   else
     h1= "Job not found"
@@ -43,3 +44,4 @@ block scripts
   script(src="/scripts/jobDetail.js")
   script.
     drawPolylines(`#{positions}`)
+    createCanvases(`#{ticketCounts}`)

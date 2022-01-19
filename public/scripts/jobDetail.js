@@ -45,6 +45,61 @@ function drawPolyline(points, color, ticketNumber, ticketStatus) {
   map.fitBounds(polygon.getBounds());
 }
 
+function createCanvases(ticketCounts) {
+  let step = ticketCounts.replaceAll("&quot;", `"`);
+  let count = JSON.parse(step);
+
+  console.log(count);
+
+  let canvasDict = {};
+
+  let average = 0;
+  let c = 0;
+  for (const ticket in count) {
+    let container = document.getElementById(`canvasContainer${ticket}`);
+    let height = container.clientHeight;
+    average += height;
+    c++;
+  }
+
+  average = average / c;
+
+  for (const ticket in count) {
+    console.log(`canvasContainer${ticket}`);
+    let container = document.getElementById(`canvasContainer${ticket}`);
+    let canvas = document.createElement('canvas');
+
+    canvas.setAttribute('width', container.clientWidth * .85);
+    canvas.setAttribute('height', average * .3);
+    canvas.setAttribute('id', `canvas${ticket}`);
+    canvas.setAttribute('class', 'percentCanvas');
+    canvas.style.backgroundColor = "red";
+    // canvas.style.float = "right";
+
+    canvasDict[ticket] = canvas;
+  }
+
+  for (const id in canvasDict) {
+    let container = document.getElementById(`canvasContainer${id}`);
+    container.appendChild(canvasDict[id]);
+
+    let percent = count[id].clear / count[id].total;
+    fillInCanvas(id, percent);
+  }
+}
+
+function fillInCanvas(id, percent) {
+  console.log(`id ${id} - percent ${percent}`);
+
+  let canvas = document.getElementById(`canvas${id}`);
+  let canv = canvas.getContext("2d");
+
+  let width = canvas.clientWidth;
+  let height = canvas.clientHeight;
+
+  canv.fillStyle = "green";
+  canv.fillRect(0, 0, width * percent, height);
+}
 
 
 var polygon = L.polyline([

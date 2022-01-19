@@ -67,13 +67,57 @@ router.get('/:jobId', (req, res, next) => {
             });
           }
 
-          res.render('jobDetail', {
-            jobId: req.params.jobId,
-            tickets: tickets,
-            jobFound: jobFound,
-            jobName: jobName,
-            positions: JSON.stringify(ticks)
+          sqlQuery =
+            `SELECT positive_response.response, positive_response.ticket_id FROM positive_response
+          INNER JOIN ticket ON positive_response.ticket_id=ticket.id
+          INNER JOIN job ON ticket.job_id=job.id
+          WHERE job.id=${jobId}`;
+
+          const resp3 = pool.query(sqlQuery, (err, resp3) => {
+            if (err) {
+              console.log(`error pulling positive responses for jobId ${jobId}`);
+            }
+
+
+            let ticketResponseCounts = {}
+
+            for (const response of resp3.rows) {
+
+              if (!ticketResponseCounts[response.ticket_id]) {
+                ticketResponseCounts[response.ticket_id] = {
+                  total: 0,
+                  clear: 0,
+                };
+              }
+
+              let clear = false;
+              if (
+                response.response.search("Marked") != -1 ||
+                response.response.search("No Conflict") != -1 ||
+                response.response.search("test code") != -1 ||
+                response.response.search("Clear No") != -1
+              ) {
+                clear = true;
+              }
+
+              if (clear) {
+                ticketResponseCounts[response.ticket_id].clear++;
+              }
+
+              ticketResponseCounts[response.ticket_id].total++;
+            }
+            res.render('jobDetail', {
+              jobId: req.params.jobId,
+              tickets: tickets,
+              jobFound: jobFound,
+              jobName: jobName,
+              positions: JSON.stringify(ticks),
+              ticketCounts: JSON.stringify(ticketResponseCounts),
+            });
+
           });
+
+
         })
 
 
