@@ -30,7 +30,8 @@ async function getTicketStatus(ticket_id) {
         response.response.search("Marked") != -1 ||
         response.response.search("No Conflict") != -1 ||
         response.response.search("Clear No") != -1 ||
-        response.response.search("test code") != -1
+        response.response.search("test code") != -1 ||
+        response.response.search("Privately owned facilities") != -1
       ) {
         // do nothing
       } else {
