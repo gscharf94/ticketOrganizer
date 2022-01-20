@@ -11,6 +11,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(map);
 
 function stopInterval() {
+  console.log('stopping');
   clearInterval(jobCheckInterval);
   document.getElementById('loadingIcon')
     .style.display = "none";
@@ -23,6 +24,7 @@ function stopInterval() {
 function checkIfJobUpdateReady(jobId) {
   let req = new XMLHttpRequest();
 
+  console.log('checking');
   req.onreadystatechange = () => {
     if (req.readyState === 4) {
       if (compareTimes(req.response)) {
@@ -35,6 +37,8 @@ function checkIfJobUpdateReady(jobId) {
 }
 
 function sendUpdateRequest(jobId) {
+
+  console.log('button clicked');
   // first we show the loading icon
   document.getElementById('loadingIcon')
     .style.display = "block";
@@ -42,7 +46,8 @@ function sendUpdateRequest(jobId) {
   let updateRequest = new XMLHttpRequest();
   updateRequest.onreadystatechange = () => {
     if (updateRequest.readyState === 4) {
-      jobCheckInterval = setInterval(checkIfJobUpdateReady, 5000, jobId);
+      console.log('this never happend?')
+      jobCheckInterval = setInterval(checkIfJobUpdateReady, 1000, jobId);
     }
   }
   updateRequest.open("POST", `/updateJob/${jobId}/0`);
@@ -52,6 +57,8 @@ function sendUpdateRequest(jobId) {
 function compareTimes(timeString) {
   let time = new Date(JSON.parse(timeString));
   let currentTime = new Date();
+  console.log(`current: ${currentTime}`)
+  console.log(`ticket: ${time}`)
   if (Math.abs(currentTime - time < 25000)) {
     return true;
   } else {

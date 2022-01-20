@@ -3,7 +3,6 @@ const { pool } = require('../db');
 const router = express.Router();
 const getJobStatus = require('../getJobStatus');
 
-
 function checkIfJobUpdated(jobId) {
   let resp = pool.query(`SELECT * FROM ticket WHERE ticket.job_id=${jobId}`, (err, resp) => {
     if (err) {
@@ -22,6 +21,7 @@ router.post('/:jobId/:check', (req, res, next) => {
   let jobId = req.params.jobId;
   if (req.params.check == 0) {
     getJobStatus(req.params.jobId);
+    res.send('empty') // need to send a dummy response
   } else if (req.params.check == 1) {
     const resp = pool.query(
       `SELECT positive_response.last_updated
@@ -32,6 +32,7 @@ router.post('/:jobId/:check', (req, res, next) => {
       if (err) {
         console.log(`error getting sample ticket for job: ${jobId}`)
       }
+      console.log(resp.rows);
       let sampleTicket = resp.rows[0];
       let lastUpdated = sampleTicket.last_updated
       res.send(JSON.stringify(lastUpdated));
