@@ -16,14 +16,14 @@ async function clearJobPositiveResponses(jobId) {
 }
 
 async function insertPositiveResponses(responses) {
-  let sqlQuery = `INSERT INTO positive_response(utility_name, response, notes, utility_type, ticket_id)\nVALUES`;
+  let sqlQuery = `INSERT INTO positive_response(utility_name, response, notes, utility_type, ticket_id, contact_number, alternate_contact_number, emergency_contact_number)\nVALUES`;
   for (const response of responses) {
     let name = escapeSingleQuote(response.name);
     let resp = escapeSingleQuote(response.response);
     let notes = escapeSingleQuote(response.notes);
     let type = escapeSingleQuote(response.type);
 
-    let value = `\n('${name}', '${resp}', '${notes}', '${type}', ${response.ticket_id}),`;
+    let value = `\n('${name}', '${resp}', '${notes}', '${type}', ${response.ticket_id}, '${response.contact}', '${response.alternateContact}', '${response.emergencyContact}'),`;
     sqlQuery += value;
   }
   sqlQuery = sqlQuery.slice(0, -1);

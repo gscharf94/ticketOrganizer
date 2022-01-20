@@ -147,7 +147,6 @@ function drawPolyline(points, color, ticketNumber, ticketStatus) {
     ticketStatus = "Pending";
   }
   polygon.bindPopup(`Ticket: ${ticketNumber} Status: ${ticketStatus}`)
-  map.fitBounds(polygon.getBounds());
 }
 
 /**

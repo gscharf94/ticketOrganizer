@@ -30,6 +30,9 @@ async function getJobStatus(tickets, jobId) {
       let utilityType = scrapingResponse[utility].utilityType;
       let utilityResponse = scrapingResponse[utility].response;
       let utilityNotes = scrapingResponse[utility].notes;
+      let utilityContact = scrapingResponse[utility].contact;
+      let utilityAlternateContact = scrapingResponse[utility].alternateContact;
+      let utilityEmergencyContact = scrapingResponse[utility].emergencyContact;
 
       outputResponse = {
         name: utility,
@@ -37,6 +40,9 @@ async function getJobStatus(tickets, jobId) {
         response: utilityResponse,
         notes: utilityNotes,
         ticket_id: ticket.id,
+        contact: utilityContact,
+        alternateContact: utilityAlternateContact,
+        emergencyContact: utilityEmergencyContact,
       }
 
       responses.push(outputResponse);
