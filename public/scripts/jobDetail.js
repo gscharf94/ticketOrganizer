@@ -10,8 +10,11 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
   accessToken: 'pk.eyJ1IjoiZ3NjaGFyZjk0IiwiYSI6ImNreWd2am9mODBjbnMyb29sNjZ2Mnd1OW4ifQ.1cSadM_VR54gigTAsVVGng'
 }).addTo(map);
 
+/**
+ * stops the jobCheckInterval (saved in a global variable)
+ * when the conditions are met in {@link checkIfJobUpdateReady}
+ */
 function stopInterval() {
-  console.log('stopping');
   clearInterval(jobCheckInterval);
   document.getElementById('loadingIcon')
     .style.display = "none";
@@ -21,10 +24,16 @@ function stopInterval() {
     .style.display = "block";
 }
 
+/**
+ * sends a POST request to /updateJob/ which responds
+ * with the last time a random ticket in that job was updated
+ * this is then compared {@link compareTimes}
+ * and if passes comparison, we stop the interval
+ * with {@link stopInterval}
+ *  */
 function checkIfJobUpdateReady(jobId) {
   let req = new XMLHttpRequest();
 
-  console.log('checking');
   req.onreadystatechange = () => {
     if (req.readyState === 4) {
       if (compareTimes(req.response)) {
@@ -36,9 +45,13 @@ function checkIfJobUpdateReady(jobId) {
   req.send();
 }
 
+/**
+ * this is what triggers when user clicks on the update button
+ * it sends a request first telling the server to update that specific job
+ * and then after it starts an interval of {@link checkIfJobUpdateReady}
+ * and that keeps going until the job is updated
+ */
 function sendUpdateRequest(jobId) {
-
-  console.log('button clicked');
   // first we show the loading icon
   document.getElementById('loadingIcon')
     .style.display = "block";
@@ -46,19 +59,22 @@ function sendUpdateRequest(jobId) {
   let updateRequest = new XMLHttpRequest();
   updateRequest.onreadystatechange = () => {
     if (updateRequest.readyState === 4) {
-      console.log('this never happend?')
-      jobCheckInterval = setInterval(checkIfJobUpdateReady, 1000, jobId);
+      jobCheckInterval = setInterval(checkIfJobUpdateReady, 5000, jobId);
     }
   }
   updateRequest.open("POST", `/updateJob/${jobId}/0`);
   updateRequest.send();
 }
 
+/**
+ * gets the current time and subtracts it from
+ * the time in the response from the server
+ * if that is less than 25 seconds, the job is 
+ * considered updated and returns true
+ */
 function compareTimes(timeString) {
   let time = new Date(JSON.parse(timeString));
   let currentTime = new Date();
-  console.log(`current: ${currentTime}`)
-  console.log(`ticket: ${time}`)
   if (Math.abs(currentTime - time < 25000)) {
     return true;
   } else {
@@ -66,6 +82,13 @@ function compareTimes(timeString) {
   }
 }
 
+
+/**
+ * takes in an object that is like a dictionary
+ * {ticketId: { points: [{a: number, b: number, p: number}], ticket_status: boolean}
+ * a & b are GPS coordinates, p is a place because it's a polygon/line that has various points
+ * so this way the function draws the line in the correct order
+ */
 function drawPolylines(polylines) {
   // weird result of express & stringify.. need to remove
   // the &quot; because JSON.parse() can't read it
@@ -83,6 +106,11 @@ function drawPolylines(polylines) {
   }
 }
 
+/**
+ * draws a line, binds a popup to it with bindPopup()
+ * and then uses map.fitBounds() to set the map location to the line/polygon
+ * @todo create new map fitbound function that accounts for all points
+ */
 function drawPolyline(points, color, ticketNumber, ticketStatus) {
   let arr = [];
   for (const point of points) {
@@ -101,6 +129,10 @@ function drawPolyline(points, color, ticketNumber, ticketStatus) {
   map.fitBounds(polygon.getBounds());
 }
 
+/**
+ * creates the canvasses, gives them a size which is based on the average
+ * of all row heights. these are placed in a container prelabeld in pug
+ */
 function createCanvases(ticketCounts) {
   let step = ticketCounts.replaceAll("&quot;", `"`);
   let count = JSON.parse(step);
@@ -127,10 +159,13 @@ function createCanvases(ticketCounts) {
     canvas.setAttribute('id', `canvas${ticket}`);
     canvas.setAttribute('class', 'percentCanvas');
     canvas.style.backgroundColor = "red";
-    // canvas.style.float = "right";
 
     canvasDict[ticket] = canvas;
   }
+
+  // important to add the canvas AFTER, because once we add we change
+  // the height of the row and the width of the column, and that creates
+  // this weird effect where each canvas is bigger than the last
 
   for (const id in canvasDict) {
     let container = document.getElementById(`canvasContainer${id}`);
@@ -141,8 +176,13 @@ function createCanvases(ticketCounts) {
   }
 }
 
-function fillInCanvas(id, percent) {
 
+/**
+ * used with {@link createCanvases}
+ * in order to fill in the progress bars horizontally
+ * based on a percentage
+ */
+function fillInCanvas(id, percent) {
   let canvas = document.getElementById(`canvas${id}`);
   let canv = canvas.getContext("2d");
 
@@ -152,11 +192,3 @@ function fillInCanvas(id, percent) {
   canv.fillStyle = "green";
   canv.fillRect(0, 0, width * percent, height);
 }
-
-
-var polygon = L.polyline([
-  [28.4166552, -81.4176226],
-  [28.4169289, -81.417746],
-]).addTo(map);
-
-map.fitBounds(polygon.getBounds());
