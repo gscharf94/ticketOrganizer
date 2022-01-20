@@ -9,6 +9,7 @@ block content
 
   if jobFound
     h1= `${jobName}`
+    button(onclick=`sendUpdateRequest(${jobId})`) Update Job
     div#map
     table#ticketTable.nonResponseTable
       thead

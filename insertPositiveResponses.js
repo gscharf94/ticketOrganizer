@@ -5,6 +5,7 @@ function escapeSingleQuote(txt) {
 }
 
 async function clearJobPositiveResponses(jobId) {
+  console.log(`deleting positive responses for jobId: ${jobId}`)
   let sqlQuery = `DELETE FROM positive_response USING ticket WHERE positive_response.ticket_id=ticket.id AND ticket.job_id=${jobId};`
   const res = await pool.query(sqlQuery, (err, res) => {
     if (err) {

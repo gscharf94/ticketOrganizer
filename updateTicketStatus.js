@@ -46,8 +46,7 @@ async function getTicketStatus(ticket_id) {
       } else {
         console.log(`updated ticketId: ${ticket_id} ticket_status to: ${ticketStatus}`);
       }
-
-    })
+    });
 
     console.log(`${ticket_id} is clear?: ${ticketStatus}`);
 

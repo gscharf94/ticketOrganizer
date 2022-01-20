@@ -9,6 +9,11 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
   accessToken: 'pk.eyJ1IjoiZ3NjaGFyZjk0IiwiYSI6ImNreWd2am9mODBjbnMyb29sNjZ2Mnd1OW4ifQ.1cSadM_VR54gigTAsVVGng'
 }).addTo(map);
 
+function sendUpdateRequest(jobId) {
+  let updateRequest = new XMLHttpRequest();
+  updateRequest.open("POST", `/updateJob/${jobId}`);
+  updateRequest.send();
+}
 
 function drawPolylines(polylines) {
   // weird result of express & stringify.. need to remove
