@@ -22,18 +22,24 @@ async function insertPositiveResponses(responses) {
     let resp = escapeSingleQuote(response.response);
     let notes = escapeSingleQuote(response.notes);
     let type = escapeSingleQuote(response.type);
+    let contact = escapeSingleQuote(response.contact);
+    let alternate = escapeSingleQuote(response.alternateContact);
+    let emergency = escapeSingleQuote(response.emergencyContact);
 
-    let value = `\n('${name}', '${resp}', '${notes}', '${type}', ${response.ticket_id}, '${response.contact}', '${response.alternateContact}', '${response.emergencyContact}'),`;
+    let value = `\n('${name}', '${resp}', '${notes}', '${type}', ${response.ticket_id}, '${contact}', '${alternate}', '${emergency}'),`;
     sqlQuery += value;
   }
   sqlQuery = sqlQuery.slice(0, -1);
   sqlQuery += ";";
 
+  console.log(sqlQuery);
+
   const res = await pool.query(sqlQuery, (err, resp) => {
     if (err) {
       console.log('error adding positive responses');
+    } else {
+      console.log(`succesfully added ${responses.length} positive response updates`);
     }
-    console.log(`succesfully added ${responses.length} positive response updates`);
   });
 }
 
