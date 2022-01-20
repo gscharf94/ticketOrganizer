@@ -25,3 +25,52 @@
 .descriptionCell {
   font-size: 1.5ch;
 }
+
+
+#updateJobButton {
+  font-size: 2ch;
+  margin-bottom: 1%;
+  padding: 0.5%;
+  border-style: none;
+}
+
+#updateJobButton:hover {
+  background-color:rgb(75, 66, 133);
+  color: white;
+}
+
+#buttonHeader {
+  margin-left: 1%;
+  display: none;
+}
+
+#buttonContainer {
+  display: flex;
+  align-items: flex-start;
+}
+
+#loadingIcon {
+  display: none;
+  border: 10px solid #f3f3f3;
+  border-top: 10px solid #0452aa;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  animation: spin 1.25s linear infinite;
+  margin-left: 1%;
+  margin-bottom: 1%;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+#refreshLink {
+  color: blue;
+  text-decoration: underline;
+  font-size: 2ch;
+  cursor: pointer;
+  margin-left: 1%;
+  display: none;
+}

@@ -9,7 +9,11 @@ block content
 
   if jobFound
     h1= `${jobName}`
-    button(onclick=`sendUpdateRequest(${jobId})`) Update Job
+    div#buttonContainer
+      button(onclick=`sendUpdateRequest(${jobId})`)#updateJobButton Update Job
+      h2#buttonHeader Updated ✅
+      p#refreshLink(onclick="location.reload()") Refresh Page
+      div#loadingIcon
     div#map
     table#ticketTable.nonResponseTable
       thead

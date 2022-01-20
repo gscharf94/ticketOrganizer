@@ -1,3 +1,4 @@
+let jobCheckInterval = "";
 let map = L.map('map');
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -9,10 +10,53 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
   accessToken: 'pk.eyJ1IjoiZ3NjaGFyZjk0IiwiYSI6ImNreWd2am9mODBjbnMyb29sNjZ2Mnd1OW4ifQ.1cSadM_VR54gigTAsVVGng'
 }).addTo(map);
 
+function stopInterval() {
+  clearInterval(jobCheckInterval);
+  document.getElementById('loadingIcon')
+    .style.display = "none";
+  document.getElementById('buttonHeader')
+    .style.display = "block";
+  document.getElementById('refreshLink')
+    .style.display = "block";
+}
+
+function checkIfJobUpdateReady(jobId) {
+  let req = new XMLHttpRequest();
+
+  req.onreadystatechange = () => {
+    if (req.readyState === 4) {
+      if (compareTimes(req.response)) {
+        stopInterval();
+      }
+    }
+  }
+  req.open("POST", `/updateJob/${jobId}/1`);
+  req.send();
+}
+
 function sendUpdateRequest(jobId) {
+  // first we show the loading icon
+  document.getElementById('loadingIcon')
+    .style.display = "block";
+
   let updateRequest = new XMLHttpRequest();
-  updateRequest.open("POST", `/updateJob/${jobId}`);
+  updateRequest.onreadystatechange = () => {
+    if (updateRequest.readyState === 4) {
+      jobCheckInterval = setInterval(checkIfJobUpdateReady, 5000, jobId);
+    }
+  }
+  updateRequest.open("POST", `/updateJob/${jobId}/0`);
   updateRequest.send();
+}
+
+function compareTimes(timeString) {
+  let time = new Date(JSON.parse(timeString));
+  let currentTime = new Date();
+  if (Math.abs(currentTime - time < 25000)) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function drawPolylines(polylines) {
@@ -54,8 +98,6 @@ function createCanvases(ticketCounts) {
   let step = ticketCounts.replaceAll("&quot;", `"`);
   let count = JSON.parse(step);
 
-  console.log(count);
-
   let canvasDict = {};
 
   let average = 0;
@@ -70,7 +112,6 @@ function createCanvases(ticketCounts) {
   average = average / c;
 
   for (const ticket in count) {
-    console.log(`canvasContainer${ticket}`);
     let container = document.getElementById(`canvasContainer${ticket}`);
     let canvas = document.createElement('canvas');
 
@@ -94,7 +135,6 @@ function createCanvases(ticketCounts) {
 }
 
 function fillInCanvas(id, percent) {
-  console.log(`id ${id} - percent ${percent}`);
 
   let canvas = document.getElementById(`canvas${id}`);
   let canv = canvas.getContext("2d");
