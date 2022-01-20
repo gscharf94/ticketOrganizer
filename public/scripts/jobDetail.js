@@ -82,11 +82,30 @@ function compareTimes(timeString) {
   }
 }
 
+/**
+ * takes in the same input as {@link drawPolyLines}
+ * and fits the map after everything has been drawn
+ * so all the job shows up correctly
+ * 
+ */
+function fitMap(polylines) {
+  let pointsArr = [];
+  for (const ticket in polylines) {
+    let points = polylines[ticket].points;
+    for (const point of points) {
+      pointsArr.push([point.b, point.a]);
+    }
+  }
+  map.fitBounds(pointsArr)
+}
 
 /**
  * takes in an object that is like a dictionary
  * {ticketId: { points: [{a: number, b: number, p: number}], ticket_status: boolean}
  * a & b are GPS coordinates, p is a place because it's a polygon/line that has various points
+ * a = lat b = lng
+ * a+ -> north a- -> south
+ * b+ -> east b- -> west
  * so this way the function draws the line in the correct order
  */
 function drawPolylines(polylines) {
@@ -104,6 +123,8 @@ function drawPolylines(polylines) {
     }
     drawPolyline(points, color, polylines[ticket].ticket_number, polylines[ticket].ticket_status);
   }
+
+  fitMap(polylines);
 }
 
 /**
