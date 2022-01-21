@@ -30,6 +30,22 @@ router.get('/:ticketId', (req, res, next) => {
       } else {
         positiveResponse.good_highlight = false;
       }
+
+      // formatting contact info to make it easier to display with pug
+      let rawContactText = positiveResponse.contact_number;
+      let [contactName, contactNumber] = rawContactText.split("(");
+      positiveResponse.contact_number_name = contactName;
+      positiveResponse.contact_number_phone = `(${contactNumber}`;
+
+      let rawAlternateText = positiveResponse.alternate_contact_number;
+      let [alternateName, alternateNumber] = rawAlternateText.split("(");
+      positiveResponse.alternate_number_name = alternateName;
+      positiveResponse.alternate_number_phone = `(${alternateNumber}`;
+
+      let rawEmergencyText = positiveResponse.emergency_contact_number;
+      let [emergencyName, emergencyNumber] = rawEmergencyText.split("(");
+      positiveResponse.emergency_number_name = emergencyName;
+      positiveResponse.emergency_number_phone = `(${emergencyNumber}`;
     }
 
     let ticketInfoQuery =
@@ -52,7 +68,6 @@ router.get('/:ticketId', (req, res, next) => {
       }
 
       ticketInfo[0].expiration_date_formatted = formattingFunctions.formatDate(ticketInfo[0].expiration_date);
-
 
       res.render('ticketDetail', {
         ticketId: ticketId,

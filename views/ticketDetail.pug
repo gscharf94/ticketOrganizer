@@ -30,6 +30,7 @@ block content
           th Utility Type
           th Response
           th Notes
+          th Contacts
           th Last Update
       tbody
         each response in responses
@@ -39,6 +40,28 @@ block content
               td #{response.utility_type}
               td #{response.response}
               td #{response.notes}
+              - let contactCellId = `contactCell${response.id}`;
+              - let contactContainerId = `contactContainer${response.id}`;
+              td(id=contactCellId).contactCell
+                div(id=contactContainerId).contactContainer
+                  button.dropDownButton Copy Contacts
+                  div.dropDownLinks
+                    if response.contact_number != ""
+                      a(href=`tel:${response.contact_number_phone}`).contactNumber
+                        h3.contactHeader Primary 
+                        p.contactContent #{response.contact_number_name}
+                        p.contactContent #{response.contact_number_phone}
+                    if response.alternate_contact_number != ""
+                      a(href=`tel:${response.alternate_number_phone}`).contactNumber
+                        h3.contactHeader Alternate
+                        p.contactContent #{response.alternate_number_name}
+                        p.contactContent #{response.alternate_number_phone}
+                    if response.emergency_contact_number != ""
+                      a(href=`tel:${response.emergency_number_phone}`).contactNumber
+                        h3.contactHeader Alternate
+                        h3.contactHeader Emergency
+                        p #{response.emergency_number_name}
+                        p #{response.emergency_number_phone}
               td #{response.last_updated_formatted}
           else
             tr.pendingRow
@@ -46,6 +69,32 @@ block content
               td #{response.utility_type}
               td #{response.response}
               td #{response.notes}
+              - let contactCellId = `contactCell${response.id}`;
+              - let contactContainerId = `contactContainer${response.id}`;
+              td(id=contactCellId).contactCell
+                div(id=contactContainerId).contactContainer
+                  button.dropDownButton Copy Contacts
+                  div.dropDownLinks
+                    if response.contact_number != ""
+                      a(href=`tel:${response.contact_number_phone}`).contactNumber
+                        h3.contactHeader Primary 
+                        p.contactContent #{response.contact_number_name}
+                        p.contactContent #{response.contact_number_phone}
+                    if response.alternate_contact_number != ""
+                      a(href=`tel:${response.alternate_number_phone}`).contactNumber
+                        h3.contactHeader Alternate
+                        p.contactContent #{response.alternate_number_name}
+                        p.contactContent #{response.alternate_number_phone}
+                    if response.emergency_contact_number != ""
+                      a(href=`tel:${response.emergency_number_phone}`).contactNumber
+                        h3.contactHeader Alternate
+                        h3.contactHeader Emergency
+                        p #{response.emergency_number_name}
+                        p #{response.emergency_number_phone}
               td #{response.last_updated_formatted}
   else
     h1= "Ticket not found"
+
+
+block scripts
+  script(src="/scripts/ticketDetailScript.js") 

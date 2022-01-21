@@ -5,3 +5,53 @@
 .pendingRow {
   background-color: lightsalmon;
 }
+
+.dropDownButton {
+  background-color: #0300c0;
+  color: white;
+  padding: 10px;
+  font-size: 1.5ch;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.contactContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.dropDownLinks {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropDownLinks .contactNumber {
+  color: black;
+  padding: 12px 16px;
+  margin: 0px;
+  text-decoration: none;
+  display: block;
+}
+
+.contactContainer:hover .dropDownLinks {
+  display: block;
+}
+
+.dropDownLinks .contactNumber:hover {
+  background-color: #f1f1f1;
+}
+
+.contactNumber {
+  display: block;
+  cursor: pointer;
+}
+
+
+.contactContainer:hover .dropDownButton {
+  background-color: #3e438e;
+}
