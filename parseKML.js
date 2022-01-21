@@ -20,10 +20,43 @@ function parseCoords(txt) {
 }
 
 function parseBoreKml(filepath) {
-  console.log('hello world');
+  let text = fs.readFileSync(filepath, 'utf8');
 
+  let coordinateRegex = /<coordinates>([\s.\d,-]*)/g;
+  let coordinateResult = text.matchAll(coordinateRegex);
+  let coords = [...coordinateResult];
 
-  return "something";
+  let dateRegex = /<name>([\d.-]*)<\/name>/g;
+  let dateResult = text.matchAll(dateRegex);
+  let dates = [...dateResult];
+
+  let descriptionRegex = /<description>([\w\s-]*)<\/description>/g;
+  let descriptionResult = text.matchAll(descriptionRegex);
+  let descriptions = [...descriptionResult];
+
+  if (coords.length != dates.length && coords.length != descriptions) {
+    console.log('different number of dates / coords / names. something is wrong');
+    console.log('exiting prematurely');
+    return;
+  }
+
+  let coordinateSets = [];
+  for (let i = 0; i < coords.length; i++) {
+    let boreCoords = parseCoords(coords[i][1]);
+    let splitDescription = descriptions[i][1].split("-");
+    let name = splitDescription[0].trim();
+    let footage = splitDescription[1].trim().slice(0, -2);
+    let date = dates[i][1];
+
+    coordinateSets.push({
+      coords: boreCoords,
+      date: date,
+      crew: name,
+      footage: footage,
+    });
+  }
+
+  return coordinateSets;
 }
 
 function parseLocateKml(filepath) {
@@ -40,8 +73,8 @@ function parseLocateKml(filepath) {
   let data = {};
 
   if (ticketResult.length != coordinateResult.length) {
-    console.log('different number of coordinate sets and ticket number');
-    console.log('exiting');
+    console.log('different number of coordinate sets and ticket number. something is wrong');
+    console.log('exiting prematurely');
     return;
   }
 
