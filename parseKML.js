@@ -19,7 +19,14 @@ function parseCoords(txt) {
   return coords;
 }
 
-function parseKML(filepath) {
+function parseBoreKml(filepath) {
+  console.log('hello world');
+
+
+  return "something";
+}
+
+function parseLocateKml(filepath) {
   let text = fs.readFileSync(filepath, 'utf8');
 
   let coordinateRegex = /<coordinates>([\s.\d,-]*)/g;
@@ -57,4 +64,7 @@ function parseKML(filepath) {
 // }
 
 
-module.exports = parseKML;
+module.exports = {
+  parseLocateKml,
+  parseBoreKml,
+} 

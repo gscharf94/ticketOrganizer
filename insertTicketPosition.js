@@ -1,11 +1,11 @@
 const { pool } = require("./db");
-const parseKml = require('./parseKML');
+const { parseLocateKml } = require('./parseKML');
 
 
 function insertData() {
   const kmlPath = process.argv.slice(2)[0];
   console.log(kmlPath)
-  let kmlIterator = parseKml(kmlPath + "/Locates.kml");
+  let kmlIterator = parseLocateKml(kmlPath + "/Locates.kml");
 
   const resp = pool.query('SELECT id, ticket_number FROM ticket', (err, resp) => {
     if (err) {
