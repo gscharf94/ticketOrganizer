@@ -32,8 +32,6 @@ async function insertPositiveResponses(responses) {
   sqlQuery = sqlQuery.slice(0, -1);
   sqlQuery += ";";
 
-  console.log(sqlQuery);
-
   const res = await pool.query(sqlQuery, (err, resp) => {
     if (err) {
       console.log('error adding positive responses');

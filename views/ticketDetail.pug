@@ -58,7 +58,6 @@ block content
                         p.contactContent #{response.alternate_number_phone}
                     if response.emergency_contact_number != ""
                       a(href=`tel:${response.emergency_number_phone}`).contactNumber
-                        h3.contactHeader Alternate
                         h3.contactHeader Emergency
                         p #{response.emergency_number_name}
                         p #{response.emergency_number_phone}
@@ -87,7 +86,6 @@ block content
                         p.contactContent #{response.alternate_number_phone}
                     if response.emergency_contact_number != ""
                       a(href=`tel:${response.emergency_number_phone}`).contactNumber
-                        h3.contactHeader Alternate
                         h3.contactHeader Emergency
                         p #{response.emergency_number_name}
                         p #{response.emergency_number_phone}

@@ -1,6 +1,5 @@
 const { pool } = require('./db');
 
-console.log('hello world');
 
 async function getAllTickets() {
   const resp = pool.query('SELECT * FROM ticket', (err, resp) => {
@@ -22,7 +21,6 @@ async function getTicketStatus(ticket_id) {
     }
 
     let responses = resp.rows;
-    console.log(responses);
 
     let ticketStatus = true;
     for (const response of responses) {
@@ -31,7 +29,8 @@ async function getTicketStatus(ticket_id) {
         response.response.search("No Conflict") != -1 ||
         response.response.search("Clear No") != -1 ||
         response.response.search("test code") != -1 ||
-        response.response.search("Privately owned facilities") != -1
+        response.response.search("Privately owned facilities") != -1 ||
+        response.response.search("Not service provider") != -1
       ) {
         // do nothing
       } else {
