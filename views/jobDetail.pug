@@ -8,12 +8,24 @@ block style
 block content
 
   if jobFound
-    h1= `${jobName}`
-    div#buttonContainer
-      button(onclick=`sendUpdateRequest(${jobId})`)#updateJobButton Update Job
-      h2#buttonHeader Updated ✅
-      p#refreshLink(onclick="location.reload()") Refresh Page
-      div#loadingIcon
+    div#jobInfoContainer
+      h1#jobNameHeader= `${jobName}`
+      div#buttonContainer
+        button(onclick=`sendUpdateRequest(${jobId})`)#updateJobButton Update Job
+        h2#buttonHeader Updated ✅
+        p#refreshLink(onclick="location.reload()") Refresh Page
+        div#loadingIcon
+      h3#clientNameHeader= `Fibertech`
+      div#checkContainer
+        div#checkLocates.jobCheckbox
+          label(for="checkLocates") View Locates
+          input(type="checkbox" name="checkLocates" checked)
+        div#checkBores.jobCheckbox
+          label(for="checkBores") View Bores
+          input(type="checkbox" name="checkBores")
+        div#checkVaults.jobCheckbox
+          label(for="checkVaults") View Vaults
+          input(type="checkbox" name="checkVaults")
     div#map
     table#ticketTable.nonResponseTable
       thead
