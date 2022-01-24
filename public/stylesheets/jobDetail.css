@@ -84,6 +84,8 @@
 
 #jobInfoContainer {
   display: grid;
+  grid-template-rows: 40% 30% 30%;
+  grid-template-columns: 40% 30% 30%;
   align-items: center;
   margin-right: 30%;
 }
@@ -104,6 +106,10 @@
 
 #checkContainer {
   grid-column: 2;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row: 2 / span 2;
+}
+
+.jobCheckbox {
+  margin-top: 1%;
+  margin-bottom: 1%;
 }

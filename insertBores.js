@@ -32,7 +32,7 @@ function insertBorePositions(borePositions) {
   }
 
   sqlQuery = sqlQuery.slice(0, -1);
-  sqlQuery += ";"
+  sqlQuery += ";"s
 
   const resp = pool.query(sqlQuery, (err, resp) => {
     if (err) {

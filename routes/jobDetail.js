@@ -68,9 +68,10 @@ router.get('/:jobId', (req, res, next) => {
           }
 
           sqlQuery =
-            `SELECT positive_response.response, positive_response.ticket_id FROM positive_response
+            `SELECT positive_response.response, positive_response.ticket_id, client.client_name FROM positive_response
           INNER JOIN ticket ON positive_response.ticket_id=ticket.id
           INNER JOIN job ON ticket.job_id=job.id
+          INNER JOIN client on job.client_id=client.id
           WHERE job.id=${jobId}`;
 
           const resp3 = pool.query(sqlQuery, (err, resp3) => {
@@ -78,6 +79,7 @@ router.get('/:jobId', (req, res, next) => {
               console.log(`error pulling positive responses for jobId ${jobId}`);
             }
 
+            let clientName = resp3.rows[0].client_name;
 
             let ticketResponseCounts = {}
 
@@ -115,6 +117,7 @@ router.get('/:jobId', (req, res, next) => {
               jobName: jobName,
               positions: JSON.stringify(ticks),
               ticketCounts: JSON.stringify(ticketResponseCounts),
+              clientName: clientName,
             });
 
           });
