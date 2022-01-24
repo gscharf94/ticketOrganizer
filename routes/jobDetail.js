@@ -110,24 +110,60 @@ router.get('/:jobId', (req, res, next) => {
 
               ticketResponseCounts[response.ticket_id].total++;
             }
-            res.render('jobDetail', {
-              jobId: req.params.jobId,
-              tickets: tickets,
-              jobFound: jobFound,
-              jobName: jobName,
-              positions: JSON.stringify(ticks),
-              ticketCounts: JSON.stringify(ticketResponseCounts),
-              clientName: clientName,
+
+            sqlQuery =
+              `SELECT bore_position.bore_id, bore_position.start_pos, bore_position.end_pos, bore_position.place, bore.crew_id, bore.bore_date, bore.footage, crew.name from bore_position
+            INNER JOIN bore on bore_position.bore_id=bore.id
+            INNER JOIN job on bore.job_id=job.id
+            INNER JOIN crew on bore.crew_id=crew.id 
+            WHERE job.id=${jobId}`;
+
+            const resp4 = pool.query(sqlQuery, (err, resp4) => {
+              if (err) {
+                console.log(`error pulling bore_positions for job: ${jobId}`);
+              }
+
+              console.log(resp4.rows);
+
+              let bores = {};
+
+              for (const bore of resp4.rows) {
+                if (!bores[bore.bore_id]) {
+                  bores[bore.bore_id] = {
+                    points: [],
+                    crewId: bore.crew_id,
+                    crewName: bore.name,
+                    workDate: bore.bore_date,
+                    footage: bore.footage,
+                  }
+                }
+                bores[bore.bore_id].points.push({
+                  a: bore.start_pos,
+                  b: bore.end_pos,
+                  p: bore.place,
+                });
+              }
+
+              for (const bore in bores) {
+                bores[bore].points = bores[bore].points.sort((a, b) => {
+                  return a.p - b.p;
+                });
+              }
+
+              res.render('jobDetail', {
+                jobId: req.params.jobId,
+                tickets: tickets,
+                jobFound: jobFound,
+                jobName: jobName,
+                positions: JSON.stringify(ticks),
+                ticketCounts: JSON.stringify(ticketResponseCounts),
+                clientName: clientName,
+                bores: JSON.stringify(bores),
+              });
             });
-
           });
-
-
-        })
-
-
+        });
       });
-
     }
     else {
       res.render('jobDetail', { jobId: req.params.jobId, tickets: tickets, jobFound: jobFound });

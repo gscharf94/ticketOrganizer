@@ -1,3 +1,6 @@
+let locateLayerGroup = "";
+let boreLayerGroup = "";
+let vaultLayerGroup = "";
 let jobCheckInterval = "";
 let map = L.map('map');
 
@@ -9,6 +12,74 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
   zoomOffset: -1,
   accessToken: 'pk.eyJ1IjoiZ3NjaGFyZjk0IiwiYSI6ImNreWd2am9mODBjbnMyb29sNjZ2Mnd1OW4ifQ.1cSadM_VR54gigTAsVVGng'
 }).addTo(map);
+
+function hideBoresAndVaults() {
+  removeLayerGroup(2);
+  removeLayerGroup(3);
+}
+
+function setCheckboxOnclicks() {
+  let locates = document.getElementById("checkLocates");
+  let bores = document.getElementById("checkBores");
+  let vaults = document.getElementById("checkVaults");
+
+
+  locates.addEventListener('change', (event) => {
+    if (event.target.checked) {
+      addLayerGroup(1);
+    } else {
+      removeLayerGroup(1);
+    }
+  });
+
+  bores.addEventListener('change', (event) => {
+    if (event.target.checked) {
+      addLayerGroup(2);
+    } else {
+      removeLayerGroup(2);
+    }
+  });
+}
+
+/**
+ * @param {int} type - which of the three layer groups to delete
+ * 1 = locateLayerGroup
+ * 2 = boreLayerGroup
+ * 3 = vaultLayerGroup
+ * first check if layerGroup = ""
+ */
+function removeLayerGroup(type) {
+  let group = "";
+  switch (type) {
+    case 1:
+      group = locateLayerGroup;
+      break;
+    case 2:
+      group = boreLayerGroup;
+      break;
+    case 3:
+      group = vaultLayerGroup;
+      break;
+  }
+
+  for (const layer in group._layers) {
+    group._layers[layer].removeFrom(map);
+  }
+}
+
+/**
+ * opposite of {@link removeLayerGroup}
+ * works the same way. this way it can be toggled on and off
+ */
+function addLayerGroup(type) {
+  // i think this is a nicer way to do it than the switch statement.. 
+  let groups = [locateLayerGroup, boreLayerGroup, vaultLayerGroup];
+  let group = groups[type - 1];
+
+  for (const layer in group._layers) {
+    group._layers[layer].addTo(map);
+  }
+}
 
 /**
  * stops the jobCheckInterval (saved in a global variable)
@@ -107,24 +178,49 @@ function fitMap(polylines) {
  * a+ -> north a- -> south
  * b+ -> east b- -> west
  * so this way the function draws the line in the correct order
+ * 
+ * @param {int} type - 3 types.. vault / bore / locates 
+ * depending which it is, depends which variable we save the layer
+ * group to
+ * 1 = locate
+ * 2 = bore
+ * 3 = vault
  */
-function drawPolylines(polylines) {
+function drawPolylines(polylines, type) {
   // weird result of express & stringify.. need to remove
   // the &quot; because JSON.parse() can't read it
   let step = polylines.replaceAll("&quot;", `"`);
   polylines = JSON.parse(step);
 
+  let group = L.layerGroup();
+
   for (const ticket in polylines) {
     let points = polylines[ticket].points;
     if (polylines[ticket].ticket_status) {
-      var color = "green"
+      var color = "green";
     } else {
-      var color = "red"
+      var color = "red";
     }
-    drawPolyline(points, color, polylines[ticket].ticket_number, polylines[ticket].ticket_status);
+    if (type == 2) {
+      var color = "purple";
+    }
+    let polyline = drawPolyline(points, color, polylines[ticket].ticket_number, polylines[ticket].ticket_status);
+    group.addLayer(polyline);
   }
 
   fitMap(polylines);
+
+  switch (type) {
+    case 1:
+      locateLayerGroup = group;
+      break;
+    case 2:
+      boreLayerGroup = group;
+      break;
+    case 3:
+      vaultLayerGroup = group;
+      break;
+  }
 }
 
 /**
@@ -146,7 +242,8 @@ function drawPolyline(points, color, ticketNumber, ticketStatus) {
   } else {
     ticketStatus = "Pending";
   }
-  polygon.bindPopup(`Ticket: ${ticketNumber} Status: ${ticketStatus}`)
+  polygon.bindPopup(`Ticket: ${ticketNumber} Status: ${ticketStatus}`);
+  return polygon;
 }
 
 /**
@@ -212,3 +309,5 @@ function fillInCanvas(id, percent) {
   canv.fillStyle = "green";
   canv.fillRect(0, 0, width * percent, height);
 }
+
+
