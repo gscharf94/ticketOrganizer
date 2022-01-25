@@ -151,7 +151,7 @@ async function insertBores(jobId, folder) {
   })
 }
 
-insertBores(8, "/mnt/4AB454E6B454D653/Users/Gustavo/Google Drive/locate stuff/infinite/053A_pon");
+insertBores(7, "/mnt/4AB454E6B454D653/Users/Gustavo/Google Drive/locate stuff/infinite/CF_091M_pon");
 //module.exports = {
 //  insertBores,
 //  clearBores,

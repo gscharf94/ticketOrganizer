@@ -26,6 +26,10 @@ block content
          td #{job.ticket_count}
          - let canvContainerId = `canvasContainer${job.id}`;
          td(id=canvContainerId).canvasContainer= `${job.percent_clear}%`
+  div#addJobContainer
+    a(href="/addJob") Add Job
+    img(src="/images/plusIcon.svg")#plusIcon
+
 
 block scripts
   script(src="/scripts/indexScript.js")
