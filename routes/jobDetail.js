@@ -158,6 +158,11 @@ router.get('/:jobId', (req, res, next) => {
                 }
               }
 
+              let colorsList = [];
+              for (const crew in colorDictionary) {
+                colorsList.push([crew, colorDictionary[crew]]);
+              }
+
               res.render('jobDetail', {
                 jobId: req.params.jobId,
                 tickets: tickets,
@@ -168,6 +173,7 @@ router.get('/:jobId', (req, res, next) => {
                 clientName: clientName,
                 bores: JSON.stringify(bores),
                 colorDictionary: JSON.stringify(colorDictionary),
+                colorList: colorsList,
               });
             });
           });

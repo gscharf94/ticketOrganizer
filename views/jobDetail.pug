@@ -26,6 +26,11 @@ block content
         div#checkVaults.jobCheckbox
           label(for="checkVaults") View Vaults
           input(type="checkbox" name="checkVaults")
+      div#checkBoresLegend
+        each crew in colorList
+          div(class=`${crew[1]}Legend legend`)
+            div(class=`${crew[1]}Square square`)
+            h4.crewName #{crew[0]}
     div#map
     table#ticketTable.nonResponseTable
       thead

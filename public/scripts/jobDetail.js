@@ -36,8 +36,10 @@ function setCheckboxOnclicks() {
   bores.addEventListener('change', (event) => {
     if (event.target.checked) {
       addLayerGroup(2);
+      document.getElementById("checkBoresLegend").style.display = "block";
     } else {
       removeLayerGroup(2);
+      document.getElementById("checkBoresLegend").style.display = "none";
     }
   });
 }

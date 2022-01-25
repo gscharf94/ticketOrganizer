@@ -113,3 +113,50 @@
   margin-top: 1%;
   margin-bottom: 1%;
 }
+
+
+#checkBoresLegend {
+  display: none;
+  grid-column: 3;
+  grid-row: 2;
+  grid-row: 2 / span 2;
+}
+
+.legend {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+
+
+.square {
+  width: 15px;
+  height: 15px;
+  border: solid 2px black;
+  margin-right: 3%;
+  margin-left: 1%;
+}
+
+.blueSquare {
+  background-color: blue;
+}
+
+.yellowSquare {
+  background-color: yellow;
+}
+
+.purpleSquare {
+  background-color: purple;
+}
+
+.orangeSquare {
+  background-color: orange;
+}
+
+
+
+
+.crewName {
+  margin-bottom: 2%;
+  margin-top: 2%;
+}
