@@ -123,8 +123,6 @@ router.get('/:jobId', (req, res, next) => {
                 console.log(`error pulling bore_positions for job: ${jobId}`);
               }
 
-              console.log(resp4.rows);
-
               let bores = {};
 
               for (const bore of resp4.rows) {
@@ -144,10 +142,20 @@ router.get('/:jobId', (req, res, next) => {
                 });
               }
 
+
+              let colorDictionary = {};
+              let colorList = ["blue", "yellow", "purple", "orange"];
+
+              let colorCounter = 0;
               for (const bore in bores) {
                 bores[bore].points = bores[bore].points.sort((a, b) => {
                   return a.p - b.p;
                 });
+
+                if (!colorDictionary[bores[bore].crewName]) {
+                  colorDictionary[bores[bore].crewName] = colorList[colorCounter];
+                  colorCounter++;
+                }
               }
 
               res.render('jobDetail', {
@@ -159,6 +167,7 @@ router.get('/:jobId', (req, res, next) => {
                 ticketCounts: JSON.stringify(ticketResponseCounts),
                 clientName: clientName,
                 bores: JSON.stringify(bores),
+                colorDictionary: JSON.stringify(colorDictionary),
               });
             });
           });

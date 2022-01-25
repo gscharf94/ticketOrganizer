@@ -1,3 +1,4 @@
+// so many global variables... 😅
 let locateLayerGroup = "";
 let boreLayerGroup = "";
 let vaultLayerGroup = "";
@@ -171,6 +172,19 @@ function fitMap(polylines) {
 }
 
 /**
+ * formats date string into date object
+ * returned as string expressed MM/DD/YYYY
+ */
+function formatDate(date) {
+  date = new Date(date);
+  let day = String(date.getDate()).padStart(2, "0");
+  let month = String(date.getMonth() + 1).padStart(2, "0");
+  let year = date.getFullYear();
+
+  return `${month}/${day}/${year}`;
+}
+
+/**
  * takes in an object that is like a dictionary
  * {ticketId: { points: [{a: number, b: number, p: number}], ticket_status: boolean}
  * a & b are GPS coordinates, p is a place because it's a polygon/line that has various points
@@ -186,25 +200,41 @@ function fitMap(polylines) {
  * 2 = bore
  * 3 = vault
  */
-function drawPolylines(polylines, type) {
+function drawPolylines(polylines, type, colorDictionary) {
   // weird result of express & stringify.. need to remove
   // the &quot; because JSON.parse() can't read it
   let step = polylines.replaceAll("&quot;", `"`);
   polylines = JSON.parse(step);
+  if (colorDictionary) {
+    step = colorDictionary.replaceAll("&quot;", `"`);
+    colorDictionary = JSON.parse(step);
+  }
 
   let group = L.layerGroup();
 
   for (const ticket in polylines) {
     let points = polylines[ticket].points;
-    if (polylines[ticket].ticket_status) {
-      var color = "green";
-    } else {
-      var color = "red";
+    // default color we change for each separate thing
+    let color = "blue"
+    // switch cases are weird
+    let popupText = ""
+
+    switch (type) {
+      case 1:
+        if (polylines[ticket].ticket_status) {
+          color = "green";
+        } else {
+          color = "red";
+        }
+        popupText = `Ticket: ${polylines[ticket].ticket_number} Clear? ${polylines[ticket].ticket_status}`;
+        break;
+      case 2:
+        color = colorDictionary[polylines[ticket].crewName]
+        // @todo add some formatting to the date string
+        popupText = `Crew: ${polylines[ticket].crewName} Date: ${formatDate(polylines[ticket].workDate)} Footage: ${polylines[ticket].footage}`;
+        break;
     }
-    if (type == 2) {
-      var color = "purple";
-    }
-    let polyline = drawPolyline(points, color, polylines[ticket].ticket_number, polylines[ticket].ticket_status);
+    let polyline = drawPolyline(points, color, popupText);
     group.addLayer(polyline);
   }
 
@@ -226,9 +256,9 @@ function drawPolylines(polylines, type) {
 /**
  * draws a line, binds a popup to it with bindPopup()
  * and then uses map.fitBounds() to set the map location to the line/polygon
- * @todo create new map fitbound function that accounts for all points
- */
-function drawPolyline(points, color, ticketNumber, ticketStatus) {
+ * @̶t̶o̶d̶o̶ ̶c̶r̶e̶a̶t̶e̶ ̶n̶e̶w̶ ̶m̶a̶p̶ ̶f̶i̶t̶b̶o̶u̶n̶d̶ ̶f̶u̶n̶c̶t̶i̶o̶n̶ ̶t̶h̶a̶t̶ ̶a̶c̶c̶o̶u̶n̶t̶s̶ ̶f̶o̶r̶ ̶a̶l̶l̶ ̶p̶o̶i̶n̶t̶s̶
+̶ */
+function drawPolyline(points, color, popupText) {
   let arr = [];
   for (const point of points) {
     let row = [point.b, point.a];
@@ -237,12 +267,7 @@ function drawPolyline(points, color, ticketNumber, ticketStatus) {
 
 
   let polygon = L.polyline(arr, { "color": color, "weight": 6, "fill": true }).addTo(map);
-  if (ticketStatus) {
-    ticketStatus = "Clear";
-  } else {
-    ticketStatus = "Pending";
-  }
-  polygon.bindPopup(`Ticket: ${ticketNumber} Status: ${ticketStatus}`);
+  polygon.bindPopup(popupText);
   return polygon;
 }
 
